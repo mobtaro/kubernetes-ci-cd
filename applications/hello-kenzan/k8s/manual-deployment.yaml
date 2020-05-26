@@ -23,6 +23,9 @@ metadata:
 spec:
   strategy:
     type: Recreate
+  selector:
+    matchLabels:
+      app: hello-kenzan    
   template:
     metadata:
       labels:
