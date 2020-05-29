@@ -33,7 +33,7 @@ spec:
         tier: hello-kenzan
     spec:
       containers:
-      - image: localhost:32000/hello-kenzan:latest
+      - image: localhost:32000/hello-kenzan:$BUILD_TAG
         name: hello-kenzan
         ports:
         - containerPort: 80
