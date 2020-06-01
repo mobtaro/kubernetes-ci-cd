@@ -18,10 +18,11 @@ node {
     
     stage "Push"
 
-        sh "docker push ${imageName}"
+        sh "docker push ${imageName}" 
 
     stage "Deploy"
 
+        env.TAG=tag
         kubernetesDeploy configs: "applications/${appName}/k8s/*.yaml", kubeconfigId: 'kenzan_kubeconfig'
 
 }
