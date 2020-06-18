@@ -1,4 +1,6 @@
 FROM node:boron
+ARG http_proxy
+ARG https_proxy
 
 # Create app directory
 RUN mkdir -p /usr/src/app
