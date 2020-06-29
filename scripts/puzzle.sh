@@ -4,10 +4,10 @@
 BUILD_TAG=`git rev-parse --short HEAD`
 
 #Build the docker image
-docker build -t 127.0.0.1:30400/puzzle:$BUILD_TAG -f applications/puzzle/Dockerfile applications/puzzle
+docker build -t 127.0.0.1:32000/puzzle:$BUILD_TAG -f applications/puzzle/Dockerfile applications/puzzle
 
 #Setup the proxy for the registry
-docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=`minikube ip`" -e "REG_PORT=30400" --name socat-registry -p 30400:5000 socat-registry
+docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=${K8S_IP}" -e "REG_PORT=32000" --name socat-registry -p 30400:5000 socat-registry
 
 echo "5 second sleep to make sure the registry is ready"
 sleep 5;
@@ -19,5 +19,6 @@ docker push 127.0.0.1:30400/puzzle:$BUILD_TAG
 docker stop socat-registry
 
 # Create the deployment and service for the puzzle server aka puzzle
-sed 's#127.0.0.1:30400/puzzle:$BUILD_TAG#127.0.0.1:30400/puzzle:'$BUILD_TAG'#' applications/puzzle/k8s/deployment.yaml | kubectl apply -f -
+sed -e 's#127.0.0.1:30400/puzzle:$BUILD_TAG#localhost:32000/puzzle:'$BUILD_TAG'#' -e "s/192.168.99.100/${K8S_IP}/" applications/puzzle/k8s/deployment.yaml | kubectl apply -f -
+#sed -e 's#127.0.0.1:30400/monitor-scale:$BUILD_TAG#localhost:32000/monitor-scale:'`git rev-parse --short HEAD`'#' -e "s/192.168.99.100/${K8S_IP}/" applications/monitor-scale/k8s/deployment.yaml | kubectl apply -f -
 
