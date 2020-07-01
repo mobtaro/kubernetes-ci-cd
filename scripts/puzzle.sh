@@ -4,7 +4,7 @@
 BUILD_TAG=`git rev-parse --short HEAD`
 
 #Build the docker image
-docker build -t 127.0.0.1:32000/puzzle:$BUILD_TAG -f applications/puzzle/Dockerfile applications/puzzle
+docker build -t 127.0.0.1:32000/puzzle:$BUILD_TAG --build-arg http_proxy=$http_proxy --build-arg https_proxy=$https_proxy -f applications/puzzle/Dockerfile applications/puzzle
 
 #Setup the proxy for the registry
 docker stop socat-registry; docker rm socat-registry; docker run -d -e "REG_IP=${K8S_IP}" -e "REG_PORT=32000" --name socat-registry -p 30400:5000 socat-registry
